@@ -1,1 +1,47 @@
-{"version":"0.3.0","body":"function main(workbook: ExcelScript.Workbook) {\n    const srcSheet = workbook.getActiveWorksheet();\n    const usedRange = srcSheet.getUsedRange();\n    if (!usedRange) return;\n\n    const values = usedRange.getValues() as (string | number)[][];\n    const entries = [] as string[];\n    let mes: string = \"\";\n\n    let i = 0;\n    let count_entry = 0;\n    let count_source = 0;\n\n    while (i < values.length) {\n      const colA = String(values[i][0] ?? \"\");\n      if (colA !== \"COMMON\" && colA !==\"\"){\n        entries.push(colA);\n        count_entry++;\n        if (count_source > 1) {\n          mes += entries[entries.length - 2] + 'に' + count_source + '個のsourceがあります; '\n        }\n        count_source = 0;\n      }\n      const colB = String(values[i][1] ?? \"\");\n      if (colB === \"source\") {\n        count_source++;\n      }\n\n      i++;\n    }\n    if (mes ===\"\") {\n      mes = \"source複数はありません\"\n    }\n    console.log(mes);\n\n    const duplicates = entries.filter(\n      (value, index) => entries.indexOf(value) !== index\n    );\n    if (duplicates.length > 0) {\n      console.log(duplicates + 'のEntry nameが重複しています');\n      srcSheet.getCell(0, 6).setValue(duplicates + 'のEntry nameが重複しています; ' + mes);\n    } else {\n      console.log(\"Entry name重複はありません\");\n      srcSheet.getCell(0, 6).setValue(\"Entry name重複はありません; \" + mes);\n    }\n\n}","description":"","noCodeMetadata":"","parameterInfo":"{\"version\":1,\"originalParameterOrder\":[],\"parameterSchema\":{\"type\":\"object\",\"default\":{},\"x-ms-visibility\":\"internal\"},\"returnSchema\":{\"type\":\"object\",\"properties\":{}},\"signature\":{\"comment\":\"\",\"parameters\":[{\"name\":\"workbook\",\"comment\":\"\"}]}}","apiInfo":"{\"variant\":\"synchronous\",\"variantVersion\":2}"}
+function main(workbook: ExcelScript.Workbook) {
+    const srcSheet = workbook.getActiveWorksheet();
+    const usedRange = srcSheet.getUsedRange();
+    if (!usedRange) return;
+
+    const values = usedRange.getValues() as (string | number)[][];
+    const entries = [] as string[];
+    let mes: string = "";
+
+    let i = 0;
+    let count_entry = 0;
+    let count_source = 0;
+
+    while (i < values.length) {
+      const colA = String(values[i][0] ?? "");
+      if (colA !== "COMMON" && colA !==""){
+        entries.push(colA);
+        count_entry++;
+        if (count_source > 1) {
+          mes += entries[entries.length - 2] + 'に' + count_source + '個のsourceがあります; '
+        }
+        count_source = 0;
+      }
+      const colB = String(values[i][1] ?? "");
+      if (colB === "source") {
+        count_source++;
+      }
+
+      i++;
+    }
+    if (mes ==="") {
+      mes = "source複数はありません"
+    }
+    console.log(mes);
+
+    const duplicates = entries.filter(
+      (value, index) => entries.indexOf(value) !== index
+    );
+    if (duplicates.length > 0) {
+      console.log(duplicates + 'のEntry nameが重複しています');
+      srcSheet.getCell(0, 6).setValue(duplicates + 'のEntry nameが重複しています; ' + mes);
+    } else {
+      console.log("Entry name重複はありません");
+      srcSheet.getCell(0, 6).setValue("Entry name重複はありません; " + mes);
+    }
+
+}
