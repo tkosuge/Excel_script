@@ -5,7 +5,7 @@ function main(workbook: ExcelScript.Workbook) {
     const rowCount = usedRange.getRowCount();
     // 第1列(0) ～ 第5列(4)
     const ann_range = sheet.getRangeByIndexes(0, 0, rowCount, 5);
-    if (!range) return;
+    if (!ann_range) return;
     const values = ann_range.getValues() as (string | number | Date)[][];
 
     const entries = [] as string[];
