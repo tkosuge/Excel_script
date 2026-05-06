@@ -1,0 +1,58 @@
+function main(workbook: ExcelScript.Workbook) {
+    // 入力元（アクティブシート）
+    const inSheet = workbook.getActiveWorksheet();
+    const usedRange = inSheet.getUsedRange();
+    const values = usedRange.getValues() as string[][];
+
+    // 出力先シート
+    let outSheet = workbook.getWorksheet("nucl");
+    if (!outSheet) {
+        outSheet = workbook.addWorksheet("nucl");
+    }
+
+    // FASTA
+    const output: string[][] = [];
+
+    let currentId = "";
+    let seq = "";
+    let entry_count = 0;
+
+    for (const row of values) {
+        const line = String(row[0] ?? "").trim(); // A列
+
+        if (line === "" || line === "//") continue;
+
+        if (line.startsWith(">") && entry_count > 0) {
+            output.push([currentId, seq, seq.length]);
+            entry_count++;
+            currentId = line.substring(1).trim();
+            seq = "";
+        }
+        if (line.startsWith(">") && entry_count === 0) {
+            entry_count++;
+            currentId = line.substring(1).trim();
+            seq = "";
+        }
+        if (!line.startsWith(">")) seq += line;
+    }
+    // 最後のエントリー用
+    output.push([currentId, seq, seq.length]);
+
+    // ヘッダー
+    outSheet.getCell(0, 0).setValue("Entry");
+    outSheet.getCell(0, 1).setValue("Sequence");
+    outSheet.getCell(0, 2).setValue("Length[bp]");
+
+    // 配列表示
+    if (output.length > 0) {
+        outSheet
+            .getRangeByIndexes(1, 0, output.length, 3)
+            .setValues(output);
+    }
+
+    // ヘッダー行固定
+    outSheet.activate();
+    let selectedSheet = workbook.getActiveWorksheet();
+    selectedSheet.getFreezePanes().freezeRows(1);
+
+}
