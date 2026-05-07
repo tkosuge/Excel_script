@@ -157,7 +157,8 @@ function main(workbook: ExcelScript.Workbook) {
 
     // Qualifier使用数サマリ
     outSheet.getCell(0, 0).setValue('Summary');
-    let row = 1;
+    outSheet.getCell(1, 0).setValue(`numofentry: ${entryCount}`);
+    let row = 2;
     for (const [k, v] of Object.entries(maxLengthByqualKey)) {
       outSheet.getCell(row, 0).setValue(`${k}: ${v}`);
       row++;
