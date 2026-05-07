@@ -6,9 +6,12 @@
 このrepositoryにある各スクリプトをコピーして、コードエディタにペーストし、コードエディタの名前の変更機能で、好きな名前に変える
 
 # 機能
-- 塩基配列を1行形式にする.osts ... Fasta形式の配列をEntryName[tab]Sequenceの形式にし、1エントリーを1行で表す形式に変換します。
-- Entry name重複チェック.osts ... Annotationファイル内のEntry nameの重複使用、1 entryにsourceが複数使われていかを検出します。
-- sourceブロックをパース.osts ... sourceフィーチャーフィールドと、第一biologicalフィーチャーを取り出して、表形式に変換します。
+### 塩基配列を1行形式にする.osts
+Fasta形式の配列をEntryName[tab]Sequenceの形式にし、1エントリーを1行で表す形式に変換します。
+### Entry name重複チェック.osts
+Annotationファイル内のEntry nameの重複使用、1 entryにsourceが複数使われていかを検出します。
+### sourceブロックをパース.osts
+sourceフィーチャーフィールドと、第一biologicalフィーチャーを取り出して、表形式に変換します。
 
 # 使い方
 1. エクセル365を起動
