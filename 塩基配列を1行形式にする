@@ -42,7 +42,7 @@ function main(workbook: ExcelScript.Workbook) {
     outSheet.getCell(0, 0).setValue("Entry");
     outSheet.getCell(0, 1).setValue("Sequence");
     outSheet.getCell(0, 2).setValue("Length[bp]");
-    outSheet.getCell(0, 3).setValue(`NumEntry: ${entry_count}`);
+    outSheet.getCell(0, 3).setValue(`NumofEntry: ${entry_count}`);
 
     // 配列表示
     if (output.length > 0) {
