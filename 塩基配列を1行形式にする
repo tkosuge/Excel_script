@@ -25,12 +25,12 @@ function main(workbook: ExcelScript.Workbook) {
         if (line.startsWith(">") && entry_count > 0) {
             output.push([currentId, seq, seq.length]);
             entry_count++;
-            currentId = line.substring(1).trim();
+            currentId = line.trim();
             seq = "";
         }
         if (line.startsWith(">") && entry_count === 0) {
             entry_count++;
-            currentId = line.substring(1).trim();
+            currentId = line.trim();
             seq = "";
         }
         if (!line.startsWith(">")) seq += line;
@@ -42,6 +42,7 @@ function main(workbook: ExcelScript.Workbook) {
     outSheet.getCell(0, 0).setValue("Entry");
     outSheet.getCell(0, 1).setValue("Sequence");
     outSheet.getCell(0, 2).setValue("Length[bp]");
+    outSheet.getCell(0, 3).setValue(`NumEntry: ${entry_count}`);
 
     // 配列表示
     if (output.length > 0) {
