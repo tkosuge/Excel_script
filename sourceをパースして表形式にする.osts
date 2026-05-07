@@ -134,13 +134,15 @@ function main(workbook: ExcelScript.Workbook) {
     if (!outSheet) {
         outSheet = workbook.addWorksheet("anntbl");
     }
-    let offset = 2;
+    let offset = 1;
     // Array.from(qualSet).forEach((v, idx) => {
     //     outSheet.getCell(0, offset+1+idx).setValue(v);
     // });
 
     // Entry name表示
     outSheet.getCell(0, offset).setValue("Entry#");
+    const range_custom = outSheet.getRangeByIndexes(0, offset, 1 + entries.length, 1);
+    range_custom.setNumberFormat("@");
     Array.from(entries).forEach((v, idx) => {
         outSheet.getCell(1+idx, offset).setValue(v);
     });
@@ -183,7 +185,7 @@ function main(workbook: ExcelScript.Workbook) {
     entries.forEach(entryname => {
       const rowData: (string | number | Date)[] = [];
       for (const [k, v] of Object.entries(maxLengthByqualKey)) {
-        // ★ collection_date の開始列を保存（最初の1回だけ）
+        // collection_date の開始列を保存（最初の1回だけ）
         if (k === "collection_date" && collectiondateCol === null) {
           collectiondateCol = rowData.length;
         }
@@ -201,6 +203,9 @@ function main(workbook: ExcelScript.Workbook) {
 
     const startRow = 1;
     const startCol = offset + 1;
+    // 文字列にしておく
+    outSheet.getRangeByIndexes(startRow, startCol, outputData.length, outputData[0].length).setNumberFormat("@");
+    // 表示実行
     outSheet
       .getRangeByIndexes(
         startRow,
@@ -209,25 +214,44 @@ function main(workbook: ExcelScript.Workbook) {
         outputData[0].length
       )
       .setValues(outputData);
-
-    // date列書式をdate形式に変更
+    
+    // col_date列をdate形式に変更
     if (collectiondateCol !== null) {
-      const startRow = 1;                 // データ開始行（0始まり）
+      const startRow = 1;                 // データ開始行
       const rowCount = entries.length;    // データ行数
 
-      const range = outSheet.getRangeByIndexes(
-        startRow,
-        collectiondateCol + startCol,
-        rowCount,
-        maxLengthByqualKey['collection_date']
-      );
-      range.setNumberFormatLocal("yyyy-mm-dd");
+      // collection_date複数のことがあるのでcoll_dateの列ごとに処理
+      for (let i = 0; i < maxLengthByqualKey['collection_date']; i++ ) {
+        const range = outSheet.getRangeByIndexes(
+          startRow,
+          collectiondateCol + startCol + i,
+          rowCount,
+          1
+        );
+        range.setNumberFormat("yyyy-mm-dd");
+        range.getFormat().autofitColumns();
+
+        // const colldate_values = range.getValues();
+        // colldate_values.forEach((v, idx) => {
+        //   if (v[0] < 2100) {
+        //     const range_custom = outSheet.getRangeByIndexes(
+        //         idx + 1,
+        //         collectiondateCol + startCol + i,
+        //         1,
+        //         1
+        //     );
+        //     range_custom.setNumberFormat("@");
+        //   }
+        // });
+      }
     }
 
     // 先頭行固定、アクティブにしておいてからでないとfreezeRowsでエラーになる
     let sheet_res = workbook.getWorksheet("anntbl");
     sheet_res.activate();
     let selectedSheet = workbook.getActiveWorksheet();
-    selectedSheet.getFreezePanes().freezeRows(1);
+    selectedSheet.getFreezePanes().freezeRows(1);  
+    // A列の幅を自動調整
+    sheet_res.getRange("A:A").getFormat().autofitColumns();
 
 }
