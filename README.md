@@ -10,7 +10,7 @@
 Fasta形式の配列をEntryName[tab]Sequenceの形式にし、1エントリーを1行で表す形式に変換します。
 ### Entry name重複チェック.osts
 Annotationファイル内のEntry nameの重複使用と1 entryにsourceが複数使われていることを検出します。
-### sourceブロックをパース.osts
+### sourceをパースして表形式にする.osts
 sourceフィーチャーフィールドと、第一biologicalフィーチャーを取り出して、表形式に変換します。
 
 # 使い方
