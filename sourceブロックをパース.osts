@@ -130,7 +130,10 @@ function main(workbook: ExcelScript.Workbook) {
     const entryCount = Object.keys(sourceDict).length;
     console.log(`Entry 数: ${entryCount}`);
 
-    const outSheet = workbook.addWorksheet("anntbl");
+    let outSheet = workbook.getWorksheet("anntbl");
+    if (!outSheet) {
+        outSheet = workbook.addWorksheet("anntbl");
+    }
     let offset = 2;
     // Array.from(qualSet).forEach((v, idx) => {
     //     outSheet.getCell(0, offset+1+idx).setValue(v);
